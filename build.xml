@@ -1,0 +1,45 @@
+<project>
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src" destdir="build/classes"/>
+    </target>
+
+    <target name="jar">
+        <mkdir dir="build/jar"/>
+        <jar destfile="build/jar/HelloWorldApp.jar" basedir="build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="HelloWorldApp"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run">
+        <java jar="build/jar/HelloWorldApp.jar" fork="true"/>
+    </target>
+    
+    <property environment="go" />
+    <target name="tag">
+          <echo message="GO_PIPELINE_LABEL: ${go.GO_PIPELINE_LABEL}" />
+          <exec executable="pwd">
+		</exec>
+		<exec executable="env">
+		</exec>
+          <exec executable="p4">
+          	<arg line="label"/>
+        		<arg line="-o"/>
+        		<arg line="${go.GO_PIPELINE_LABEL}"/>
+		</exec>
+		<exec executable="p4">
+			<arg line="labelsync"/>
+        		<arg line="-l"/>
+        		<arg line="${go.GO_PIPELINE_LABEL}"/>
+        		<arg line="..."/>
+		</exec>
+    	</target>
+    
+</project>
+
